@@ -259,3 +259,83 @@ Cette conversion sera notamment utile pour appliquer les règles métier suivant
     la réservation ne doit pas dépasser quatre heures ;
     la réservation doit commencer dans le futur ;
     deux réservations ne doivent pas se chevaucher.
+## Étape 4 — Données initiales
+
+### Seeder
+
+Le fichier `database/seed.php` permet d'insérer les données initiales de l'application.
+
+Il ajoute cinq salles :
+
+- Amphithéâtre A — 250 places
+- Salle B12 — 40 places
+- Laboratoire Chimie — 24 places
+- Salle Informatique 1 — 30 places
+- Salle de réunion — 12 places
+
+Le script utilise `firstOrCreate()` afin d'éviter la création de doublons lorsqu'il est exécuté plusieurs fois.
+
+### Questions
+
+#### 1. Quelle différence existe entre une migration et un seeder ?
+
+Une migration sert à créer ou modifier la structure de la base de données.
+
+Par exemple, nos migrations permettent de créer les tables `salles` et `reservations`, ainsi que leurs colonnes et leurs relations.
+
+Un seeder sert à insérer des données initiales ou de démonstration dans les tables.
+
+Dans notre projet :
+
+- `database/migrations/` contient les migrations ;
+- `database/seed.php` contient les données initiales.
+
+La migration définit donc la structure de la base, tandis que le seeder fournit les données.
+
+#### 2. Pourquoi les données initiales doivent-elles être reproductibles ?
+
+Les données initiales doivent être reproductibles afin de pouvoir installer ou réinitialiser l'application facilement dans différents environnements.
+
+Un autre développeur doit pouvoir cloner le projet, créer la base de données, exécuter les migrations puis le seeder et obtenir les mêmes données initiales.
+
+Le script peut également être exécuté plusieurs fois sans provoquer de doublons.
+
+Notre seeder est donc conçu pour être idempotent.
+
+#### 3. Comment empêcher les doublons ?
+
+Nous utilisons `firstOrCreate()` d'Eloquent.
+
+Le script recherche une salle en utilisant son nom et son bâtiment :
+
+```php
+Salle::firstOrCreate(
+    [
+        'nom' => $data['nom'],
+        'batiment' => $data['batiment'],
+    ],
+    $data
+);
+
+Si la salle existe déjà, Eloquent la récupère sans créer une nouvelle ligne.
+
+Si elle n'existe pas, Eloquent l'insère dans la base de données.
+
+Cette approche permet d'exécuter le seeder plusieurs fois sans créer inutilement de doublons.
+
+
+---
+
+# 5. Tester les données dans MySQL
+
+Tu peux également vérifier directement dans MySQL :
+
+```bash
+sudo mysql
+
+USE reservation_salles;
+
+SELECT id, nom, batiment, capacite, type, active
+FROM salles;
+SELECT COUNT(*) FROM salles;
+Resultat: 5
