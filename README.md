@@ -168,3 +168,94 @@ Plus proche de la base	Plus proche du code objet
 Beaucoup de SQL	Moins de SQL explicite
 
 Eloquent simplifie donc la manipulation de la base de données, tout en permettant également d'utiliser du Query Builder lorsque nécessaire.
+
+## Étape 3 — Modèles Eloquent
+
+### Questions
+
+#### 1. Quel type de relation Eloquent avons-nous utilisé ?
+
+Nous avons utilisé une relation **One-to-Many (un-à-plusieurs)**.
+
+Une salle peut avoir plusieurs réservations. Dans le modèle `Salle`, nous utilisons `hasMany()` :
+
+```php
+public function reservations(): HasMany
+{
+    return $this->hasMany(Reservation::class, 'salle_id');
+}
+
+Nous pouvons donc utiliser :
+
+$salle->reservations;
+
+pour récupérer les réservations d'une salle, et :
+
+$reservation->salle;
+
+pour récupérer la salle d'une réservation.
+
+
+
+2. Pourquoi déclarer $fillable ou $guarded ?
+
+$fillable permet de définir les attributs qui peuvent être remplis lors d'une assignation de masse.
+
+Par exemple, dans Salle :
+
+protected $fillable = [
+    'nom',
+    'batiment',
+    'capacite',
+    'type',
+    'active',
+];
+
+Cela permet d'utiliser :
+
+Salle::create($data);
+
+tout en contrôlant les champs qui peuvent être affectés.
+
+Cela protège l'application contre l'assignation accidentelle de champs qui ne devraient pas être modifiés.
+3. Pourquoi convertir active en booléen ?
+
+La colonne active est définie comme un booléen dans la base de données :
+
+$table->boolean('active')->default(true);
+
+Nous avons donc ajouté dans le modèle Salle :
+
+protected $casts = [
+    'active' => 'boolean',
+];
+
+Eloquent convertit automatiquement la valeur en true ou false.
+
+Cela permet d'écrire simplement :
+
+if ($salle->active) {
+    // La salle est active
+}
+
+au lieu de manipuler directement 0 et 1.
+4. Pourquoi convertir les dates en objets ?
+
+Dans le modèle Reservation, nous avons :
+
+protected $casts = [
+    'salle_id' => 'integer',
+    'date_debut' => 'datetime',
+    'date_fin' => 'datetime',
+];
+
+Les dates sont ainsi manipulées comme des objets plutôt que comme de simples chaînes de caractères.
+
+Cela facilite les comparaisons et les calculs de durée.
+
+Cette conversion sera notamment utile pour appliquer les règles métier suivantes :
+
+    la date de début doit précéder la date de fin ;
+    la réservation ne doit pas dépasser quatre heures ;
+    la réservation doit commencer dans le futur ;
+    deux réservations ne doivent pas se chevaucher.
