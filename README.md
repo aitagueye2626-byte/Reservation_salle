@@ -77,3 +77,94 @@ Il n'est pas nécessaire de le versionner car il peut être recréé à partir d
 composer install
 
 De plus, vendor/ contient beaucoup de fichiers générés automatiquement et alourdirait inutilement le dépôt Git. Il est donc ajouté au .gitignore.
+  Etape 3
+
+
+1. Quel rôle joue Capsule\Manager ?
+
+Capsule\Manager permet d'utiliser Eloquent en dehors de Laravel.
+
+Il sert notamment à :
+
+    configurer la connexion à MySQL ;
+    définir les paramètres de connexion ;
+    démarrer Eloquent ;
+    rendre la connexion disponible aux modèles Eloquent.
+
+Dans notre projet, c'est lui qui fait le lien entre PHP et MySQL.
+2. Pourquoi Eloquent peut-il fonctionner sans Laravel ?
+
+Parce qu'Eloquent est disponible sous forme de composant indépendant via :
+
+illuminate/database
+
+Laravel utilise Eloquent, mais Eloquent n'a pas besoin de tout Laravel pour fonctionner.
+
+Dans notre projet, nous avons donc installé :
+
+composer require illuminate/database:^12.0
+
+et nous utilisons directement :
+
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+Cela permet d'avoir l'ORM Eloquent sans installer le framework Laravel complet.
+
+Avantage : notre projet reste léger et nous apprenons à assembler nous-mêmes les composants.
+
+3. Où doit se trouver le démarrage de l'ORM ?
+
+Le démarrage de l'ORM doit se trouver dans la configuration de l'application, et non dans les modèles ou les contrôleurs.
+
+Dans notre projet, nous avons :
+
+config/
+└── database.php
+
+C'est ce fichier qui :
+
+    charge les variables d'environnement ;
+    configure Capsule\Manager ;
+    configure la connexion MySQL ;
+    démarre Eloquent.
+
+Les classes métier ne doivent donc pas faire elles-mêmes :
+
+new Capsule();
+
+ou :
+
+Dotenv::createImmutable(...);
+
+Elles doivent simplement recevoir leurs dépendances.
+
+C'est important pour respecter la séparation des responsabilités.
+4. Quelle différence existe entre ORM et SQL écrit à la main ?
+
+Avec du SQL classique, on écrit directement les requêtes :
+
+SELECT * FROM salles WHERE active = 1;
+
+Avec Eloquent, on manipule des objets et des modèles :
+
+$salles = Salle::where('active', true)->get();
+
+L'ORM (Object-Relational Mapping) fait le lien entre les objets PHP et les tables SQL.
+
+Par exemple :
+
+Objet PHP                  Base MySQL
+──────────                 ──────────
+Salle                      salles
+$salle->nom                salles.nom
+$salle->capacite           salles.capacite
+
+Comparaison
+SQL écrit à la main	Eloquent
+SELECT * FROM salles	Salle::all()
+SQL directement	Objets PHP
+Gestion manuelle des résultats	Modèles Eloquent
+Plus proche de la base	Plus proche du code objet
+Beaucoup de SQL	Moins de SQL explicite
+
+Eloquent simplifie donc la manipulation de la base de données, tout en permettant également d'utiliser du Query Builder lorsque nécessaire.
