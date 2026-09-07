@@ -71,3 +71,15 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 - `SalleController` : index, show, create, store, edit, update.
 - `ReservationController` : index, show, create, store, cancel.
 - Templates : layout de base, vues salle (index/show/form), vues réservation (index/show/form), pages d'erreur 404/405.
+- ## [v0.6.1] - Ajout du pattern Builder (demande du coach)
+
+### Ajouté
+- `CreerSalleDTOBuilder` : construction du DTO Salle étape par étape.
+- `CreerReservationDTOBuilder` : construction du DTO Reservation étape par étape.
+- Utilisation du Builder dans `ReservationController::store()`.
+
+## [v0.2.1] - Dockerisation de MySQL (demande du coach)
+
+### Ajouté
+- `docker-compose.yml` pour lancer MySQL en conteneur.
+- Script CLI `aita` pour lancer les migrations et le seeder (`php aita migrate`, `php aita seed`).
