@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\CreerReservationDTO;
+use App\DTO\CreerReservationDTOBuilder;
 use App\Exception\ReservationIntrouvableException;
 use App\Exception\SalleIndisponibleException;
 use App\Repository\ReservationRepositoryInterface;
@@ -83,8 +83,7 @@ final class ReservationController
             ]);
         }
 
-        $dto = CreerReservationDTO::fromArray($resultat->data());
-
+        $dto = CreerReservationDTOBuilder::fromArray($resultat->data());
         try {
             $this->creerReservationService->executer($dto);
         } catch (SalleIndisponibleException $e) {
