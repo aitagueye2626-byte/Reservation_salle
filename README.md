@@ -407,3 +407,36 @@ l'emploi.
 Non. Le DTO ne contient aucune règle métier — ni le chevauchement, ni la
 comparaison des dates, ni la durée maximale. Toutes ces règles vivent
 exclusivement dans le service métier (étape 8).
+
+## Étape 7 — Accès aux données (Repositories)
+
+### Questions
+
+#### 1. Eloquent constitue-t-il déjà un accès aux données ?
+
+Oui, Eloquent est déjà en soi une couche d'accès aux données : il fournit un
+ORM (Active Record) qui sait interroger et manipuler les tables `salles` et
+`reservations`.
+
+#### 2. Pourquoi ajouter un Repository au-dessus d'Eloquent ?
+
+Pour isoler le reste de l'application (contrôleurs, services) de la manière
+concrète dont les données sont récupérées. Les contrôleurs et services ne
+dépendent que d'une interface (`SalleRepositoryInterface`,
+`ReservationRepositoryInterface`), jamais d'Eloquent directement. Cela
+respecte la contrainte du sujet : aucun `Salle::query()` ni `->save()` dans
+les contrôleurs.
+
+#### 3. Cette abstraction est-elle toujours nécessaire ?
+
+Pas toujours : sur un petit projet ou un prototype, elle peut être considérée
+comme un sur-découpage inutile. Elle prend tout son sens quand on veut
+pouvoir tester sans base de données, ou changer d'ORM/de source de données
+sans toucher au reste de l'application.
+
+#### 4. Quel avantage apporte-t-elle ?
+
+Elle permet de tester les services métier avec une implémentation en
+mémoire du repository (sans MySQL), et de centraliser toutes les requêtes
+liées à une entité en un seul endroit — notamment la logique de recherche de
+chevauchement (`findConflict`), qui ne doit être écrite qu'une fois.

@@ -51,3 +51,9 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 - `SalleValidator` avec Respect\Validation.
 - `ReservationValidator` avec Respect\Validation.
 - Script de test manuel `test-validation.php`.
+## [v0.7.0] - Étape 7 — Accès aux données (Repositories)
+
+### Ajouté
+- `SalleRepositoryInterface` et `EloquentSalleRepository`.
+- `ReservationRepositoryInterface` et `EloquentReservationRepository`.
+- Méthode `findConflict()` traduisant la règle de chevauchement.
