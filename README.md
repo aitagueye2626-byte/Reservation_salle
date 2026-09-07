@@ -441,3 +441,12 @@ mémoire du repository (sans MySQL), et de centraliser toutes les requêtes
 liées à une entité en un seul endroit — notamment la logique de recherche de
 chevauchement (`findConflict`), qui ne doit être écrite qu'une fois.
 
+## Étape 9 — Contrôleurs et vues
+
+Les contrôleurs (`SalleController`, `ReservationController`) ne font aucune
+requête ORM directe : ils dépendent uniquement des interfaces de repository
+et des validateurs. Toutes les sorties dynamiques dans les vues sont
+échappées via `View::e()`. Les erreurs de validation (format des champs)
+s'affichent près du champ concerné ; les erreurs métier (salle inactive,
+conflit de créneau...) s'affichent dans une zone générale du formulaire de
+réservation, car elles ne concernent pas un champ précis.

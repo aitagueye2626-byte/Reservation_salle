@@ -64,3 +64,10 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 - `ReservationIntrouvableException`.
 - `CreerReservationService` : applique les 9 règles métier de création d'une réservation.
 - `AnnulerReservationService` : annule une réservation existante.
+## [v0.9.0] - Étape 9 — Interface web (Contrôleurs et vues)
+
+### Ajouté
+- `View` : classe utilitaire de rendu de templates avec échappement (`e()`).
+- `SalleController` : index, show, create, store, edit, update.
+- `ReservationController` : index, show, create, store, cancel.
+- Templates : layout de base, vues salle (index/show/form), vues réservation (index/show/form), pages d'erreur 404/405.
