@@ -83,3 +83,11 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 ### Ajouté
 - `docker-compose.yml` pour lancer MySQL en conteneur.
 - Script CLI `aita` pour lancer les migrations et le seeder (`php aita migrate`, `php aita seed`).
+- ## [v0.10.0] - Étape 10 — Routeur (FastRoute)
+
+### Ajouté
+- Déclaration des routes dans `routes/web.php` (salles et réservations).
+- Dispatcher FastRoute dans `public/index.php`.
+- Gestion des cas NOT_FOUND (404), METHOD_NOT_ALLOWED (405, avec en-tête `Allow`), et FOUND.
+- Suppression de la query string avant le dispatch.
+- `public/assets/style.css` : mise en forme de base de l'interface.
