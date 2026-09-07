@@ -1,0 +1,26 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/vendor/autoload.php';
+
+$commande = $argv[1] ?? null;
+
+switch ($commande) {
+
+    case 'migrate':
+        require __DIR__ . '/database/migrate.php';
+        break;
+
+    case 'seed':
+        require __DIR__ . '/database/seed.php';
+        break;
+
+    default:
+        echo "Commande inconnue.\n";
+        echo "Commandes disponibles :\n";
+        echo "  php aita migrate\n";
+        echo "  php aita seed\n";
+        exit(1);
+}

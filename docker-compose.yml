@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: reservation-salles-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: reservation_salles
+      MYSQL_USER: reservation_user
+      MYSQL_PASSWORD: reservation_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data: 
