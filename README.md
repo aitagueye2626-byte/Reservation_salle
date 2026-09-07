@@ -440,3 +440,4 @@ Elle permet de tester les services métier avec une implémentation en
 mémoire du repository (sans MySQL), et de centraliser toutes les requêtes
 liées à une entité en un seul endroit — notamment la logique de recherche de
 chevauchement (`findConflict`), qui ne doit être écrite qu'une fois.
+

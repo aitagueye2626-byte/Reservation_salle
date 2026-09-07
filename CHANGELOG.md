@@ -57,3 +57,10 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 - `SalleRepositoryInterface` et `EloquentSalleRepository`.
 - `ReservationRepositoryInterface` et `EloquentReservationRepository`.
 - Méthode `findConflict()` traduisant la règle de chevauchement.
+## [v0.8.0] - Étape 8 — Règles métier (Services)
+
+### Ajouté
+- `SalleIndisponibleException` avec les cas : inexistante, inactive, période invalide, durée excessive, date passée, conflit.
+- `ReservationIntrouvableException`.
+- `CreerReservationService` : applique les 9 règles métier de création d'une réservation.
+- `AnnulerReservationService` : annule une réservation existante.
