@@ -374,3 +374,36 @@ En accumulant les erreurs dans un tableau associatif
 (`$errors['champ'][] = 'message'`) au lieu de s'arrêter au premier échec.
 `ValidationResult` transporte ensuite tout le tableau, ce qui permet
 d'afficher toutes les erreurs d'un formulaire en une seule soumission.
+
+## Étape 6 — Objets de transport (DTO)
+
+### Questions
+
+#### 1. Quelle différence existe entre DTO et modèle Eloquent ?
+
+Le modèle Eloquent (`Salle`, `Reservation`) est lié à la base de données : il
+sait se sauvegarder, se retrouver, se supprimer, et porte des relations
+(`hasMany`, `belongsTo`). Le DTO, lui, ne connaît rien à la base de données —
+c'est un simple conteneur de données typées, dont le seul rôle est de
+transporter de l'information entre deux couches (contrôleur → service) de
+façon sûre et prévisible.
+
+#### 2. Pourquoi le DTO ne doit-il pas appeler `save()` ?
+
+Parce qu'un DTO n'a pas de comportement lié à la persistance — ce n'est pas
+son rôle (responsabilité unique). S'il savait se sauvegarder, il faudrait
+qu'il connaisse Eloquent ou la base de données, ce qui casserait la
+séparation entre « transporter des données » et « les persister ».
+
+#### 3. À quel moment transforme-t-on les chaînes en dates ?
+
+Au moment de la construction du DTO (`fromArray()`), une fois que le
+validateur a confirmé que la chaîne est bien une date valide. Le service
+métier reçoit donc directement des objets `DateTimeImmutable` prêts à
+l'emploi.
+
+#### 4. Le DTO doit-il contenir la règle de chevauchement ?
+
+Non. Le DTO ne contient aucune règle métier — ni le chevauchement, ni la
+comparaison des dates, ni la durée maximale. Toutes ces règles vivent
+exclusivement dans le service métier (étape 8).
