@@ -37,10 +37,7 @@ Le fichier `.gitignore` permet notamment d'empêcher le versionnement de fichier
 
 Le premier commit a été créé avec le message :
 
-```text
-init: initialiser le dépôt
 
-ChatGPT a dit :
 Questions — Étape 1
 1. Quel est le rôle de Composer ?
 
