@@ -339,3 +339,38 @@ SELECT id, nom, batiment, capacite, type, active
 FROM salles;
 SELECT COUNT(*) FROM salles;
 Resultat: 5
+
+## Étape 5 — Validation
+
+### Questions
+
+#### 1. Pourquoi séparer la validation syntaxique des règles métier ?
+
+La validation syntaxique vérifie la forme des données (une chaîne a la bonne
+longueur, un email a le bon format). Les règles métier vérifient la cohérence
+fonctionnelle (la salle existe, elle est active, pas de chevauchement).
+Séparer les deux permet de réutiliser le validateur indépendamment de la
+logique métier, et de tester chaque couche isolément — un validateur n'a pas
+besoin de MySQL pour fonctionner.
+
+#### 2. Pourquoi créer une interface de validation ?
+
+Cela impose un contrat commun (`validate(array): ValidationResult`) à tous
+les validateurs. N'importe quelle classe qui dépend d'un validateur peut
+alors dépendre de `ValidatorInterface` plutôt que d'une classe concrète
+précise — ce qui respecte le principe d'inversion des dépendances (le « D »
+de SOLID) et facilite les tests (on peut injecter un faux validateur).
+
+#### 3. Pourquoi le validateur ne doit-il pas enregistrer les données ?
+
+Parce que sa seule responsabilité est de vérifier des données (principe de
+responsabilité unique). S'il sauvegardait aussi en base, on ne pourrait plus
+le tester sans base de données, et on mélangerait deux préoccupations
+différentes (validation et persistance).
+
+#### 4. Comment retourner plusieurs erreurs en une seule fois ?
+
+En accumulant les erreurs dans un tableau associatif
+(`$errors['champ'][] = 'message'`) au lieu de s'arrêter au premier échec.
+`ValidationResult` transporte ensuite tout le tableau, ce qui permet
+d'afficher toutes les erreurs d'un formulaire en une seule soumission.
