@@ -23,13 +23,22 @@ final class SalleController
             'content' => View::render('salle/index', ['salles' => $this->salles->findAll()]),
         ]);
     }
-
+    public function accueil(): string
+    {
+    return View::render('layout/base', [
+        'title' => 'Accueil',
+        'content' => View::render('accueil'),
+    ]);
+    }
     public function show(int $id): string
     {
         $salle = $this->salles->find($id);
 
         if ($salle === null) {
-            return View::render('error/404');
+            return View::render('layout/base', [
+    'title' => 'Introuvable',
+    'content' => View::render('error/404'),
+]);
         }
 
         return View::render('layout/base', [
@@ -87,7 +96,10 @@ final class SalleController
         $salle = $this->salles->find($id);
 
         if ($salle === null) {
-            return View::render('error/404');
+           return View::render('layout/base', [
+    'title' => 'Introuvable',
+    'content' => View::render('error/404'),
+]);
         }
 
         $resultat = $this->validator->validate($data);

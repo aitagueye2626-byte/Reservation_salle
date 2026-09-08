@@ -46,7 +46,10 @@ final class ReservationController
         $reservation = $this->reservations->find($id);
 
         if ($reservation === null) {
-            return View::render('error/404');
+        return View::render('layout/base', [
+    'title' => 'Introuvable',
+    'content' => View::render('error/404'),
+]);
         }
 
         return View::render('layout/base', [

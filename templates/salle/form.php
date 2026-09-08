@@ -1,4 +1,7 @@
 <?php
+/** @var \App\Model\Salle|null $salle */
+/** @var array<string,string[]> $errors */
+/** @var array<string,mixed> $old */
 use App\View\View;
 
 $salle ??= null;
@@ -51,7 +54,7 @@ $valeur = static function (string $champ, mixed $defaut = '') use ($salle, $old)
     <?php endforeach; ?>
 
     <label>
-        <input type="checkbox" name="active" value="1" <?= $valeur('active', true) ? 'checked' : '' ?>>
+        <input type="checkbox" name="active" value="1" style="width:auto;display:inline-block;margin-right:0.4rem;" <?= $valeur('active', true) ? 'checked' : '' ?>>
         Active
     </label>
 

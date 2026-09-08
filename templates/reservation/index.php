@@ -1,11 +1,16 @@
 <?php
-
+/** @var \App\Model\Reservation[] $reservations */
+/** @var \App\Model\Salle[] $salles */
+/** @var int|null $salleId */
 use App\View\View;
 ?>
 <h1>Réservations</h1>
-<a href="/reservations/create">+ Nouvelle réservation</a>
 
-<form method="get" action="/reservations">
+<div class="page-actions">
+    <a href="/reservations/create" class="btn-lien">+ Nouvelle réservation</a>
+</div>
+
+<form method="get" action="/reservations" style="max-width:320px;">
     <label>Filtrer par salle
         <select name="salle_id" onchange="this.form.submit()">
             <option value="">Toutes les salles</option>
@@ -29,10 +34,14 @@ use App\View\View;
             <td><a href="/reservations/<?= (int) $reservation->id ?>"><?= View::e($reservation->responsable) ?></a></td>
             <td><?= $reservation->date_debut->format('d/m/Y H:i') ?></td>
             <td><?= $reservation->date_fin->format('d/m/Y H:i') ?></td>
-            <td><?= View::e($reservation->statut) ?></td>
+            <td>
+                <span class="statut statut-<?= $reservation->statut === 'confirmée' ? 'confirmee' : 'annulee' ?>">
+                    <?= View::e($reservation->statut) ?>
+                </span>
+            </td>
             <td>
                 <?php if ($reservation->statut === 'confirmée'): ?>
-                    <form method="post" action="/reservations/<?= (int) $reservation->id ?>/cancel">
+                    <form method="post" action="/reservations/<?= (int) $reservation->id ?>/cancel" style="margin:0;padding:0;border:none;max-width:none;">
                         <button type="submit">Annuler</button>
                     </form>
                 <?php endif; ?>

@@ -3,7 +3,10 @@
 use App\View\View;
 ?>
 <h1>Salles</h1>
-<a href="/salles/create">+ Ajouter une salle</a>
+
+<div class="page-actions">
+    <a href="/salles/create" class="btn-lien">+ Ajouter une salle</a>
+</div>
 
 <table>
     <thead>
@@ -16,7 +19,11 @@ use App\View\View;
             <td><?= View::e($salle->batiment) ?></td>
             <td><?= (int) $salle->capacite ?></td>
             <td><?= View::e($salle->type) ?></td>
-            <td><?= $salle->active ? 'Active' : 'Désactivée' ?></td>
+            <td>
+                <span class="statut-<?= $salle->active ? 'active' : 'inactive' ?>">
+                    <?= $salle->active ? '● Active' : '○ Désactivée' ?>
+                </span>
+            </td>
             <td><a href="/salles/<?= (int) $salle->id ?>/edit">Modifier</a></td>
         </tr>
         <?php endforeach; ?>

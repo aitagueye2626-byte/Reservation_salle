@@ -1,5 +1,7 @@
 <?php
-
+/** @var \App\Model\Salle[] $salles */
+/** @var array<string,string[]> $errors */
+/** @var array<string,mixed> $old */
 use App\View\View;
 
 $errors ??= [];
@@ -9,9 +11,13 @@ $valeur = static fn (string $champ, mixed $defaut = '') => $old[$champ] ?? $defa
 ?>
 <h1>Nouvelle réservation</h1>
 
-<?php foreach ($errors['general'] ?? [] as $erreur): ?>
-    <p class="erreur"><?= View::e($erreur) ?></p>
-<?php endforeach; ?>
+<?php if (!empty($errors['general'])): ?>
+    <div class="erreurs-generales">
+        <?php foreach ($errors['general'] as $erreur): ?>
+            <p style="margin:0;"><?= View::e($erreur) ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
 
 <form method="post" action="/reservations">
     <label>Salle
