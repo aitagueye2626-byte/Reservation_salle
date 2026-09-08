@@ -7,7 +7,7 @@ use App\Controller\ReservationController;
 use FastRoute\RouteCollector;
 
 return function (RouteCollector $r): void {
-    $r->addRoute('GET', '/', [SalleController::class, 'index']);
+    $r->addRoute('GET', '/', [SalleController::class, 'accueil']);
     $r->addRoute('GET', '/salles', [SalleController::class, 'index']);
     $r->addRoute('GET', '/salles/create', [SalleController::class, 'create']);
     $r->addRoute('POST', '/salles', [SalleController::class, 'store']);

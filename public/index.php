@@ -53,7 +53,6 @@ switch ($routeInfo[0]) {
         [$class, $method] = $routeInfo[1];
         $vars = $routeInfo[2];
 
-        // Construction manuelle des dépendances — remplacée par PHP-DI à l'étape 11
         $salleRepo = new EloquentSalleRepository();
         $reservationRepo = new EloquentReservationRepository();
 
