@@ -489,3 +489,42 @@ conteneur d'injection de dépendances (PHP-DI, étape 11). C'est lui qui lit
 le tableau `[Classe::class, 'methode']` retourné par FastRoute, résout les
 dépendances de `Classe` via le conteneur, l'instancie, puis appelle
 `methode` avec les paramètres dynamiques de la route.
+
+## Étape 10 — Routeur (FastRoute)
+
+### Questions
+
+#### 1. Pourquoi FastRoute ne construit-il pas lui-même le contrôleur ?
+
+FastRoute a une seule responsabilité : faire correspondre une méthode HTTP et
+une URL à un « handler » (ici, un tableau `[Classe::class, 'methode']`). Il
+ne sait rien des dépendances dont cette classe a besoin pour être construite
+(repositories, validateurs, services...). Lui déléguer aussi la construction
+mélangerait deux responsabilités différentes — le routage, et l'injection de
+dépendances — qui appartiennent à des composants distincts (FastRoute et
+PHP-DI).
+
+#### 2. Quelle différence existe entre 404 et 405 ?
+
+Un 404 signifie que l'URL demandée ne correspond à aucune route connue (la
+ressource n'existe pas). Un 405 signifie que l'URL existe bien en tant que
+route, mais que la méthode HTTP utilisée n'est pas autorisée pour cette URL
+précise (par exemple, envoyer un DELETE sur /salles, alors que seules les
+méthodes GET et POST y sont déclarées).
+
+#### 3. Pourquoi contraindre {id} avec \d+ ?
+
+Pour que FastRoute ne fasse correspondre cette portion de l'URL qu'à des
+chiffres. Sans cette contrainte, une URL comme /salles/abc ou
+/salles/create pourrait être confondue avec /salles/{id} selon l'ordre de
+déclaration des routes, ce qui provoquerait des erreurs ou des
+comportements ambigus. \d+ garantit qu'on reçoit toujours un identifiant
+numérique valide dans le contrôleur.
+
+#### 4. Quel composant doit interpréter le handler retourné ?
+
+Le point d'entrée de l'application (public/index.php), à travers le
+conteneur d'injection de dépendances (PHP-DI, étape 11). C'est lui qui lit
+le tableau [Classe::class, 'methode'] retourné par FastRoute, résout les
+dépendances de Classe via le conteneur, l'instancie, puis appelle methode
+avec les paramètres dynamiques de la route.
