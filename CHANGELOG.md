@@ -99,3 +99,16 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 
 ### Modifié
 - `public/index.php` : simplifié, délègue tout à `Application` via le conteneur.
+
+## [v0.12.0] - Étape 12 — Tests
+
+### Ajouté
+- `tests/Unit/Double/InMemorySalleRepository.php` et `InMemoryReservationRepository.php` : doublures de test.
+- `tests/Unit/CreerReservationServiceTest.php` : 8 scénarios (réservation valide, salle inexistante/inactive, dates invalides, durée excessive, date passée, conflit, réservations voisines).
+- `tests/Unit/SalleValidatorTest.php` et `ReservationValidatorTest.php` : tests de validation.
+- `tests/Integration/SalleReservationIntegrationTest.php` : création de salle, relation salle/réservations, recherche de chevauchement, annulation — avec MySQL réel.
+- `phpunit.xml` configuré avec deux suites (`Unit`, `Integration`).
+
+### Modifié
+- `src/Model/Reservation.php` : ajout de `getDateFormat()` pour éviter une dépendance à la connexion lors des tests unitaires.
+- `composer.json` : ajout de `phpunit/phpunit` en dépendance de développement.

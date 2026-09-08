@@ -596,3 +596,22 @@ constructeur).
    docker compose exec app php database/seed.php
    \`\`\`
 4. L'application est accessible sur http://localhost:8080
+
+
+## Étape 12 — Tests
+
+### Exécution
+
+\`\`\`bash
+vendor/bin/phpunit --testsuite Unit          # rapides, sans MySQL
+vendor/bin/phpunit --testsuite Integration   # nécessite une base MySQL démarrée
+vendor/bin/phpunit                           # les deux suites
+\`\`\`
+
+Les tests unitaires du service (`CreerReservationServiceTest`) utilisent des
+implémentations en mémoire des repositories (`tests/Unit/Double/`), sans
+jamais se connecter à MySQL, conformément à la contrainte du sujet.
+
+**Note d'environnement** : `.env` doit avoir `DB_HOST=127.0.0.1` pour les
+tests d'intégration lancés en local (hors Docker). Si l'exécution se fait
+dans le conteneur `app`, `DB_HOST=mysql` doit être utilisé à la place.

@@ -31,4 +31,8 @@ final class Reservation extends Model
     {
         return $this->belongsTo(Salle::class, 'salle_id');
     }
+    public function getDateFormat(): string
+{
+    return 'Y-m-d H:i:s';
+}
 }
