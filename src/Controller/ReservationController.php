@@ -72,7 +72,16 @@ final class ReservationController
 
     public function store(array $data): string
     {
-      
+         foreach (['date_debut', 'date_fin'] as $champ) {
+        if (!empty($data[$champ])) {
+            $data[$champ] = str_replace('T', ' ', $data[$champ]);
+
+            if (strlen($data[$champ]) === 16) {
+                $data[$champ] .= ':00';
+            }
+        }
+    }
+
         $resultat = $this->validator->validate($data);
 
         if (!$resultat->isValid()) {

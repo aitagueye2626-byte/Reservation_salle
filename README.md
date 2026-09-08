@@ -528,3 +528,56 @@ conteneur d'injection de dépendances (PHP-DI, étape 11). C'est lui qui lit
 le tableau [Classe::class, 'methode'] retourné par FastRoute, résout les
 dépendances de Classe via le conteneur, l'instancie, puis appelle methode
 avec les paramètres dynamiques de la route.
+
+## Étape 11 — Conteneur d'injection de dépendances (PHP-DI)
+
+### Questions
+
+#### 1. Quelle différence existe entre injection et conteneur ?
+
+L'injection de dépendances est un principe : donner à un objet ce dont il a
+besoin depuis l'extérieur (via son constructeur), plutôt que de le laisser
+le créer lui-même. Le conteneur est un outil qui automatise ce principe : il
+sait comment construire chaque classe et lui fournir ses dépendances, sans
+que le développeur ait à écrire `new Xxx(new Yyy(), new Zzz())` à la main
+partout dans le code.
+
+#### 2. Qu'est-ce que l'autowiring ?
+
+C'est la capacité du conteneur à deviner automatiquement comment construire
+une classe, en lisant les types déclarés dans son constructeur, sans qu'on
+ait besoin d'écrire de configuration explicite pour elle. Par exemple,
+`autowire(CreerReservationService::class)` suffit : PHP-DI lit le
+constructeur, voit qu'il attend un `SalleRepositoryInterface` et un
+`ReservationRepositoryInterface`, et va chercher comment résoudre chacun
+d'eux dans le reste de la configuration.
+
+#### 3. Pourquoi les interfaces nécessitent-elles une définition ?
+
+Parce que l'autowiring ne peut deviner une classe concrète qu'à partir
+d'elle-même — face à une interface, PHP-DI ne peut pas savoir laquelle de
+ses implémentations utiliser (il pourrait en exister plusieurs). Il faut
+donc lui dire explicitement, par exemple
+`SalleRepositoryInterface::class => autowire(EloquentSalleRepository::class)`,
+quelle implémentation concrète associer à cette interface.
+
+#### 4. Pourquoi limiter `$container->get()` au point d'entrée ?
+
+Pour que la construction des objets reste centralisée et prévisible. Si
+n'importe quelle classe pouvait interroger le conteneur à sa guise, on
+perdrait la traçabilité des dépendances réelles de chaque classe (elles ne
+seraient plus visibles dans son constructeur), et on romprait le principe
+d'inversion de contrôle. Seul `Application` (via le point d'entrée) a
+besoin d'interroger le conteneur, car c'est elle qui doit résoudre un nom de
+classe connu uniquement à l'exécution (le contrôleur trouvé par le
+routeur) — un cas différent de « chercher ses propres dépendances ».
+
+#### 5. Quel anti-pattern apparaît si toutes les classes interrogent le conteneur ?
+
+Le « Service Locator » : au lieu de déclarer clairement ses dépendances dans
+son constructeur, une classe va les chercher elle-même dans un conteneur
+global, à n'importe quel moment. Ça rend le code plus difficile à tester
+(on ne peut plus injecter facilement une fausse dépendance) et plus
+difficile à comprendre (il faut lire tout le corps de la classe pour savoir
+de quoi elle dépend réellement, plutôt que de simplement lire son
+constructeur).

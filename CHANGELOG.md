@@ -91,3 +91,11 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 - Gestion des cas NOT_FOUND (404), METHOD_NOT_ALLOWED (405, avec en-tête `Allow`), et FOUND.
 - Suppression de la query string avant le dispatch.
 - `public/assets/style.css` : mise en forme de base de l'interface.
+## [v0.11.0] - Étape 11 — Conteneur d'injection de dépendances (PHP-DI)
+
+### Ajouté
+- `config/container.php` : définitions pour validateurs, repositories, services, `Capsule`, `Dispatcher`, `Application`.
+- `Application` : orchestre le dispatch et la résolution des contrôleurs via le conteneur.
+
+### Modifié
+- `public/index.php` : simplifié, délègue tout à `Application` via le conteneur.
