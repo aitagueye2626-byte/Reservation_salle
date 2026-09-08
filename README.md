@@ -581,3 +581,18 @@ global, à n'importe quel moment. Ça rend le code plus difficile à tester
 difficile à comprendre (il faut lire tout le corps de la classe pour savoir
 de quoi elle dépend réellement, plutôt que de simplement lire son
 constructeur).
+
+
+## Installation avec Docker
+
+1. Copier `.env.example` vers `.env`, et mettre `DB_HOST=mysql` (au lieu de `127.0.0.1`).
+2. Lancer les conteneurs :
+   \`\`\`bash
+   docker compose up -d --build
+   \`\`\`
+3. Exécuter les migrations et le seeder :
+   \`\`\`bash
+   docker compose exec app php database/migrate.php
+   docker compose exec app php database/seed.php
+   \`\`\`
+4. L'application est accessible sur http://localhost:8080
