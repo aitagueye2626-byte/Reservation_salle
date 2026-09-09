@@ -112,3 +112,13 @@ Toutes les modifications importantes du projet sont documentées dans ce fichier
 ### Modifié
 - `src/Model/Reservation.php` : ajout de `getDateFormat()` pour éviter une dépendance à la connexion lors des tests unitaires.
 - `composer.json` : ajout de `phpunit/phpunit` en dépendance de développement.
+## [v1.0.0] - Version finale
+
+### Ajouté
+- Mise en forme CSS complète.
+- Messages de succès et d'erreur harmonisés.
+- `ARCHITECTURE.md` : analyse des choix architecturaux.
+- Documentation complète dans `README.md`.
+
+### Corrigé
+- Corrections des anomalies identifiées lors de la vérification finale.
