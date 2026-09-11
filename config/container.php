@@ -18,13 +18,13 @@ use function DI\autowire;
 use function DI\factory;
 use App\Application;
 
+use App\Service\SalleService;
+use App\Service\ReservationQueryService;
+use App\View\View;
+
 return [
 
-    /*
-     * =========================
-     * VALIDATION
-     * =========================
-     */
+   
 
     SalleValidator::class =>
         autowire(SalleValidator::class),
@@ -33,11 +33,6 @@ return [
         autowire(ReservationValidator::class),
 
 
-    /*
-     * =========================
-     * REPOSITORIES
-     * =========================
-     */
 
     SalleRepositoryInterface::class =>
         autowire(EloquentSalleRepository::class),
@@ -46,11 +41,7 @@ return [
         autowire(EloquentReservationRepository::class),
 
 
-    /*
-     * =========================
-     * SERVICES
-     * =========================
-     */
+   
 
     CreerReservationService::class =>
         autowire(CreerReservationService::class),
@@ -59,11 +50,7 @@ return [
         autowire(AnnulerReservationService::class),
 
 
-    /*
-     * =========================
-     * BASE DE DONNÉES
-     * =========================
-     */
+    
 
     Capsule::class => factory(
         function (): Capsule {
@@ -71,20 +58,12 @@ return [
         }
     ),
 
-        /*
-     * =========================
-     * APPLICATION
-     * =========================
-     */
+     
 
     Application::class =>
         autowire(Application::class),
 
-    /*
-     * =========================
-     * ROUTEUR
-     * =========================
-     */
+  
 
     Dispatcher::class => factory(
         function (): Dispatcher {
@@ -93,4 +72,13 @@ return [
             );
         }
     ),
+
+        SalleService::class =>
+        autowire(SalleService::class),
+
+    ReservationQueryService::class =>
+        autowire(ReservationQueryService::class),
+
+    View::class =>
+        autowire(View::class),
 ];

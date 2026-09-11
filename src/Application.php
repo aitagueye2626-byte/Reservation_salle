@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Controller\ReservationController;
 use App\View\View;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
@@ -13,6 +14,7 @@ final class Application
     public function __construct(
         private Dispatcher $dispatcher,
         private ContainerInterface $container,
+        private View $view,
     ) {
     }
 
@@ -34,9 +36,9 @@ final class Application
             case Dispatcher::NOT_FOUND:
                 http_response_code(404);
 
-                echo View::render('layout/base', [
+                echo $this->view->render('layout/base', [
                     'title' => 'Page introuvable',
-                    'content' => View::render('error/404'),
+                    'content' => $this->view->render('error/404'),
                 ]);
 
                 break;
@@ -48,9 +50,9 @@ final class Application
 
                 header('Allow: ' . implode(', ', $allowedMethods));
 
-                echo View::render('layout/base', [
+                echo $this->view->render('layout/base', [
                     'title' => 'Méthode non autorisée',
-                    'content' => View::render('error/405'),
+                    'content' => $this->view->render('error/405'),
                 ]);
 
                 break;
@@ -68,6 +70,15 @@ final class Application
 
                 if (in_array($method, ['store', 'update'], true)) {
                     $params[] = $_POST;
+                }
+
+                if (
+                    $httpMethod === 'GET'
+                    && $class === ReservationController::class
+                    && $method === 'index'
+                    && !empty($_GET['salle_id'])
+                ) {
+                    $params[] = (int) $_GET['salle_id'];
                 }
 
                 echo $controller->{$method}(...$params);

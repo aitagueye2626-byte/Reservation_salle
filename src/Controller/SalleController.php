@@ -4,54 +4,57 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\SalleRepositoryInterface;
+use App\Service\SalleService;
 use App\Validation\SalleValidator;
 use App\View\View;
 
 final class SalleController
 {
     public function __construct(
-        private SalleRepositoryInterface $salles,
+        private SalleService $salleService,
         private SalleValidator $validator,
+        private View $view,
     ) {
     }
 
     public function index(): string
     {
-        return View::render('layout/base', [
+        return $this->view->render('layout/base', [
             'title' => 'Salles',
-            'content' => View::render('salle/index', ['salles' => $this->salles->findAll()]),
+            'content' => $this->view->render('salle/index', ['salles' => $this->salleService->lister()]),
         ]);
     }
+
     public function accueil(): string
     {
-    return View::render('layout/base', [
-        'title' => 'Accueil',
-        'content' => View::render('accueil'),
-    ]);
+        return $this->view->render('layout/base', [
+            'title' => 'Accueil',
+            'content' => $this->view->render('accueil'),
+        ]);
     }
+
     public function show(int $id): string
     {
-        $salle = $this->salles->find($id);
+        $salle = $this->salleService->trouver($id);
 
         if ($salle === null) {
-            return View::render('layout/base', [
-    'title' => 'Introuvable',
-    'content' => View::render('error/404'),
-]);
+            return $this->view->render('layout/base', [
+                'title' => 'Introuvable',
+                'content' => $this->view->render('error/404'),
+            ]);
         }
 
-        return View::render('layout/base', [
+        return $this->view->render('layout/base', [
             'title' => $salle->nom,
-            'content' => View::render('salle/show', ['salle' => $salle]),
+            'content' => $this->view->render('salle/show', ['salle' => $salle]),
         ]);
     }
 
     public function create(): string
     {
-        return View::render('layout/base', [
+        return $this->view->render('layout/base', [
             'title' => 'Ajouter une salle',
-            'content' => View::render('salle/form', ['salle' => null, 'errors' => [], 'old' => []]),
+            'content' => $this->view->render('salle/form', ['salle' => null, 'errors' => [], 'old' => []]),
         ]);
     }
 
@@ -60,9 +63,9 @@ final class SalleController
         $resultat = $this->validator->validate($data);
 
         if (!$resultat->isValid()) {
-            return View::render('layout/base', [
+            return $this->view->render('layout/base', [
                 'title' => 'Ajouter une salle',
-                'content' => View::render('salle/form', [
+                'content' => $this->view->render('salle/form', [
                     'salle' => null,
                     'errors' => $resultat->errors(),
                     'old' => $data,
@@ -70,8 +73,7 @@ final class SalleController
             ]);
         }
 
-        $salle = new \App\Model\Salle($resultat->data());
-        $this->salles->save($salle);
+        $this->salleService->creer($resultat->data());
 
         header('Location: /salles');
         exit;
@@ -79,35 +81,38 @@ final class SalleController
 
     public function edit(int $id): string
     {
-        $salle = $this->salles->find($id);
+        $salle = $this->salleService->trouver($id);
 
         if ($salle === null) {
-            return View::render('error/404');
+            return $this->view->render('layout/base', [
+                'title' => 'Introuvable',
+                'content' => $this->view->render('error/404'),
+            ]);
         }
 
-        return View::render('layout/base', [
+        return $this->view->render('layout/base', [
             'title' => 'Modifier ' . $salle->nom,
-            'content' => View::render('salle/form', ['salle' => $salle, 'errors' => [], 'old' => []]),
+            'content' => $this->view->render('salle/form', ['salle' => $salle, 'errors' => [], 'old' => []]),
         ]);
     }
 
     public function update(int $id, array $data): string
     {
-        $salle = $this->salles->find($id);
+        $salle = $this->salleService->trouver($id);
 
         if ($salle === null) {
-           return View::render('layout/base', [
-    'title' => 'Introuvable',
-    'content' => View::render('error/404'),
-]);
+            return $this->view->render('layout/base', [
+                'title' => 'Introuvable',
+                'content' => $this->view->render('error/404'),
+            ]);
         }
 
         $resultat = $this->validator->validate($data);
 
         if (!$resultat->isValid()) {
-            return View::render('layout/base', [
+            return $this->view->render('layout/base', [
                 'title' => 'Modifier ' . $salle->nom,
-                'content' => View::render('salle/form', [
+                'content' => $this->view->render('salle/form', [
                     'salle' => $salle,
                     'errors' => $resultat->errors(),
                     'old' => $data,
@@ -115,8 +120,7 @@ final class SalleController
             ]);
         }
 
-        $salle->fill($resultat->data());
-        $this->salles->save($salle);
+        $this->salleService->modifier($salle, $resultat->data());
 
         header('Location: /salles/' . $id);
         exit;
