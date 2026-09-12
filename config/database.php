@@ -4,7 +4,8 @@ use Dotenv\Dotenv;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+// $dotenv->load();
+$dotenv->safeLoad();
 
 $capsule = new Capsule();
 
