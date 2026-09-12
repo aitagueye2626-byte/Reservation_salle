@@ -20,4 +20,5 @@ return function (RouteCollector $r): void {
     $r->addRoute('POST', '/reservations', [ReservationController::class, 'store']);
     $r->addRoute('GET', '/reservations/{id:\d+}', [ReservationController::class, 'show']);
     $r->addRoute('POST', '/reservations/{id:\d+}/cancel', [ReservationController::class, 'cancel']);
+    
 };

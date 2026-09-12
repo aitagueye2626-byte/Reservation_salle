@@ -125,4 +125,23 @@ final class SalleController
         header('Location: /salles/' . $id);
         exit;
     }
+
+    public function apiIndex(): string
+{
+    $salles = $this->salleService->lister();
+
+    $donnees = array_map(
+        static fn ($salle) => [
+            'id' => $salle->id,
+            'nom' => $salle->nom,
+            'batiment' => $salle->batiment,
+            'capacite' => $salle->capacite,
+            'type' => $salle->type,
+            'active' => $salle->active,
+        ],
+        $salles
+    );
+
+    return $this->view->json($donnees);
+}
 }

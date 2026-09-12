@@ -1,0 +1,11 @@
+FROM nginx:stable-alpine
+
+RUN mkdir -p /etc/nginx/templates
+
+COPY docker/nginx.render.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/entrypoint-nginx-render.sh /usr/local/bin/entrypoint-nginx-render.sh
+
+RUN chmod +x /usr/local/bin/entrypoint-nginx-render.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint-nginx-render.sh"]
+CMD ["nginx", "-g", "daemon off;"]
