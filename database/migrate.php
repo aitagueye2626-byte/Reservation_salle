@@ -7,7 +7,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
+// $dotenv->load();
+$dotenv->safeLoad();
 
 $capsule = require dirname(__DIR__) . '/config/database.php';
 
