@@ -18,8 +18,6 @@ RUN composer install --no-dev --no-scripts --no-autoloader
 
 COPY . .
 
-RUN touch .env
-
 RUN chown -R www-data:www-data /var/www/html
 
 RUN composer dump-autoload --optimize
