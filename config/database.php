@@ -1,6 +1,7 @@
 <?php
 
-safeLoad();
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->safeLoad();
 
 $capsule = new Capsule();
 
