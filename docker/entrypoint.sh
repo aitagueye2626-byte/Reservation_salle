@@ -1,23 +1,15 @@
 #!/bin/sh
 set -e
 
-HOST="${DB_HOST:-gateway01.eu-central-1.prod.aws.tidbcloud.com}"
-PORT="${DB_PORT:-4000}"
+PORT="${PORT:-10000}"
 
-echo "Attente de la base de données TiDB (\(HOST:\)PORT)..."
+echo "Configuration de nginx sur le port ${PORT}..."
+envsubst '${PORT}' < /etc/nginx/sites-available/default > /tmp/default.conf
+mv /tmp/default.conf /etc/nginx/sites-enabled/default
 
-i=0
-while [ $i -lt 10 ]; do
-    if nc -z "\(HOST" "\)PORT" >/dev/null 2>&1; then
-        echo "Connexion TiDB réussie !"
-        break
-    fi
-    i=$((i + 1))
-    echo "TiDB indisponible, tentative $i/10..."
-    sleep 2
-done
-
-echo "Application des migrations..."
-php database/migrate.php || true
+if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+    echo "Application des migrations..."
+    php database/migrate.php
+fi
 
 exec "$@"
