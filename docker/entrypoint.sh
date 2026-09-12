@@ -8,7 +8,7 @@ echo "Attente de la base de données TiDB (\(HOST:\)PORT)..."
 
 i=0
 while [ $i -lt 10 ]; do
-    if nc -z "\(HOST" "\)PORT" >/dev/null 2>&1; then
+   if nc -z "\(HOST" "\)PORT" >/dev/null 2>&1; then
         echo "Connexion TiDB réussie !"
         break
     fi
