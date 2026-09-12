@@ -1,9 +1,10 @@
-FROM php:8.3-cli
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
+    nginx \
     && docker-php-ext-install pdo pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -19,12 +20,13 @@ COPY . .
 
 RUN composer dump-autoload --optimize
 
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/nginx.conf /etc/nginx/sites-available/default
 
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-EXPOSE 10000
+EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-10000} -t public public/index.php"]
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
