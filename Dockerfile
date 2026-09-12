@@ -18,9 +18,15 @@ RUN composer install --no-dev --no-scripts --no-autoloader
 
 COPY . .
 
+RUN touch .env
+
+RUN chown -R www-data:www-data /var/www/html
+
 RUN composer dump-autoload --optimize
 
 COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
