@@ -14,14 +14,14 @@ COUNTER=0
 
 until php -r "new PDO('mysql:host=\(DB_HOST;port=\)DB_PORT;dbname=\(DB_DATABASE', '\)DB_USERNAME', '$DB_PASSWORD');" >/dev/null 2>&1; do
     COUNTER=$((COUNTER + 1))
-    if [ \(COUNTER -gte\)TIMEOUT ]; then
+    if [ "\(COUNTER" -ge "\)TIMEOUT" ]; then
         echo "Impossible de joindre TiDB après 20s. Poursuite du démarrage du serveur web..."
         break
     fi
     sleep 2
 done
 
-if [ \(COUNTER -lt\)TIMEOUT ]; then
+if [ "\(COUNTER" -lt "\)TIMEOUT" ]; then
     echo "Connexion TiDB réussie ! Exécution des migrations..."
     php /var/www/html/database/migrate.php || true
 fi
