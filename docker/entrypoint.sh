@@ -1,30 +1,25 @@
 #!/bin/sh
 set -e
 
-DB_HOST="${DB_HOST:-gateway01.eu-central-1.prod.aws.tidbcloud.com}"
-DB_PORT="${DB_PORT:-4000}"
-DB_USERNAME="${DB_USERNAME:-43ALoeKMaJtpQ3X.root}"
-DB_PASSWORD="${DB_PASSWORD:-Z1KE4stJWMgAodQM}"
-DB_DATABASE="${DB_DATABASE:-reservation_salles}"
+DB_HOST=${DB_HOST:-"gateway01.eu-central-1.prod.aws.tidbcloud.com"}
+DB_PORT=${DB_PORT:-4000}
 
 echo "Attente de la base de données TiDB (\({DB_HOST}:\){DB_PORT})..."
 
-i=0
-connected=0
+MAX_TRIES=15
+COUNTER=0
 
-while [ $i -lt 5 ]; do
-    if php -r "new PDO('mysql:host=\(DB_HOST;port=\)DB_PORT;dbname=\(DB_DATABASE', '\)DB_USERNAME', '$DB_PASSWORD');" >/dev/null 2>&1; then
-        connected=1
+while [ \(COUNTER -lt\)MAX_TRIES ]; do
+    if nc -z "\(DB_HOST" "\)DB_PORT" >/dev/null 2>&1; then
+        echo "Connexion TiDB réussie !"
         break
     fi
-    i=$((i + 1))
+    COUNTER=$((COUNTER + 1))
+    echo "TiDB indisponible, nouvelle tentative (\(COUNTER/\)MAX_TRIES)..."
     sleep 2
 done
 
-if [ $connected -eq 1 ]; then
-    echo "Connexion TiDB réussie ! Exécution des migrations..."
-    php /var/www/html/database/migrate.php || true
-else
+if [ \(COUNTER -eq\)MAX_TRIES ]; then
     echo "Connexion TiDB impossible pour le moment. Poursuite du démarrage web..."
 fi
 
