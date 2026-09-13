@@ -1,9 +1,9 @@
 services:
   - type: web
     name: reservation-salle-app
-    env: php
-    buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php -S 0.0.0.0:$PORT -t public public/index.php
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: DB_DRIVER
         value: mysql
