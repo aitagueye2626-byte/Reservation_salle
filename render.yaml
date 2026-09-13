@@ -2,6 +2,7 @@ services:
   - type: web
     name: reservation-salle-app
     runtime: docker
+    plan: free
     dockerfilePath: ./Dockerfile
     dockerContext: .
     envVars:
